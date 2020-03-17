@@ -19,8 +19,13 @@ Imports:
     GenomicRanges,
     IRanges,
     magrittr,
+    methods,
+    readr,
     rlang,
+    stats,
+    stringr,
     tibble,
+    tidyselect,
     utils
 Suggests: 
     knitr,

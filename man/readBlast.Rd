@@ -3,7 +3,7 @@
 \name{readBlast}
 \alias{readBlast}
 \title{Read a blast result file
-    (currently only for files created using the blast parameter outfmt=6)}
+  (currently only for files created using the blast parameter outfmt=6)}
 \usage{
 readBlast(blastpath, blastformat = "outfmt6")
 }
@@ -13,14 +13,14 @@ readBlast(blastpath, blastformat = "outfmt6")
 \item{blastformat}{format of the Blast result file (currently only the default outfmt=6 is supported)}
 }
 \value{
-tibble
+a tibble
 }
 \description{
 Read a blast result file
-    (currently only for files created using the blast parameter outfmt=6)
+  (currently only for files created using the blast parameter outfmt=6)
 }
 \examples{
-## Example data sets:
+## Example data set:
     Path2Blast <- system.file("extdata", "blastExample.tab", package = "NanoBAC")
 ## Import the data:
    myblastResult <- readBlast(Path2Blast)
