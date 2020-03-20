@@ -1,5 +1,7 @@
 #' Convert an imported blast result table to a GRanges
 #'
+#' @description
+#'  Note that readlength table is expected to contain all reads (not only the reads that have an alignment)
 #' @importFrom GenomicRanges GRanges
 #' @importFrom IRanges IRanges
 #' @importFrom GenomeInfoDb Seqinfo
@@ -26,22 +28,44 @@
 
 
 blaST2GR <- function(blastresults, readlength) {
-# Note that readLength should contain all reads (without filtering compared to the reads used to align the vector)
-        resgr <- GenomicRanges::GRanges(seqnames = as.character(blastresults$SubjectACC),
-                         ranges = IRanges(start = ifelse(blastresults$Strand == "-",
-                                                         blastresults$SubjectEnd,
-                                                         blastresults$SubjectStart),
-                                         end = ifelse(blastresults$Strand == "-",
-                                                      blastresults$SubjectStart,
-                                                      blastresults$SubjectEnd)),
-                         strand = blastresults$Strand,
-                         "PercentID" = blastresults$PercentID, "AlnLength" = blastresults$AlnLength,
-                         "NumMismatch" = blastresults$NumMismatch, "NumGapOpen" = blastresults$NumGapOpen,
-                         "QueryRange" = IRanges(start = blastresults$QueryStart, end = blastresults$QueryEnd),
-                         "evalue" = blastresults$evalue, "bitscore" = blastresults$bitscore,
-                         seqinfo = GenomeInfoDb::Seqinfo(seqnames = readlength %>% dplyr::pull(.data$ReadName),
-                                                         seqlengths = readlength %>% dplyr::pull(.data$ReadLength),
-                                                         isCircular= rep(FALSE, nrow(readlength))))
+
+  ## Check readLength
+    stopifnot(colnames(readlength) == c("ReadName", "ReadLength"))
+
+    if (!is.character(readlength$ReadName)) {
+      RNN <- as.character(readlength$ReadName)
+    } else {
+      RNN <- readlength$ReadName
+    }
+
+    if (!is.integer(readlength$ReadLength)) {
+      RLL <- as.integer(readlength$ReadLength)
+    } else {
+      RLL <- readlength$ReadLength
+    }
+
+# Seqinfo
+    sqinfo <- GenomeInfoDb::Seqinfo(seqnames = RNN,
+                                   seqlengths = RLL,
+                                   isCircular= rep(FALSE, nrow(readlength)))
+
+    resgr <- GenomicRanges::GRanges(seqnames = as.character(blastresults$SubjectACC),
+                                    ranges = IRanges(start = ifelse(blastresults$Strand == "-",
+                                                                    blastresults$SubjectEnd,
+                                                                    blastresults$SubjectStart),
+                                                     end = ifelse(blastresults$Strand == "-",
+                                                                  blastresults$SubjectStart,
+                                                                  blastresults$SubjectEnd)),
+                                    strand = blastresults$Strand,
+                                    "PercentID" = blastresults$PercentID,
+                                    "AlnLength" = blastresults$AlnLength,
+                                    "NumMismatch" = blastresults$NumMismatch,
+                                    "NumGapOpen" = blastresults$NumGapOpen,
+                                    "QueryRange" = IRanges(start = blastresults$QueryStart,
+                                                           end = blastresults$QueryEnd),
+                                    "evalue" = blastresults$evalue,
+                                    "bitscore" = blastresults$bitscore,
+                                    seqinfo = sqinfo)
         return(resgr)
         }
 

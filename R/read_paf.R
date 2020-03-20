@@ -1,6 +1,6 @@
 #' Read a .paf file such as produced by minimap/minimap2.
 #' @description
-#'     This function is only slighly modified from https://raw.githubusercontent.com/thackl/thacklr/master/R/read.R
+#'     This function is only slighly modified from \url{https://raw.githubusercontent.com/thackl/thacklr/master/R/read.R}
 #'     By default, this function corrects the start values to take into account that the paf file is 0-based while R/bioconductor is generally 1-based
 #' @inheritParams readr::read_tsv
 #' @importFrom readr read_tsv

@@ -30,13 +30,13 @@ Using a value of \code{\link[readr:clipboard]{clipboard()}} will read from the s
 tibble
 }
 \description{
-This function is only slighly modified from https://raw.githubusercontent.com/thackl/thacklr/master/R/read.R
+This function is only slighly modified from \url{https://raw.githubusercontent.com/thackl/thacklr/master/R/read.R}
     By default, this function corrects the start values to take into account that the paf file is 0-based while R/bioconductor is generally 1-based
 }
 \examples{
 ## Example data set:
     Path2paf <- system.file("extdata", "pafFileExample.paf", package = "NanoBAC")
-## Import the data(ignore the parsing failures):
+## Import the data (ignore the parsing failures):
    mypaf <- read_paf(Path2paf)
 
 }

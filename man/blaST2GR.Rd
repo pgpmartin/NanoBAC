@@ -16,7 +16,7 @@ This table is expected to contain all reads, not only those having an alignment 
 GRanges
 }
 \description{
-Convert an imported blast result table to a GRanges
+Note that readlength table is expected to contain all reads (not only the reads that have an alignment)
 }
 \examples{
 ## Import some blast result data:
