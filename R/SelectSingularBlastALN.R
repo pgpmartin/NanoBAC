@@ -56,3 +56,7 @@ SelectSingularBlastALN <- function(aln,
   return(AlnToKeep)
 }
 
+## Note: this approach efficiently gets rid of the short alignments corresponding to repetitive regions of the vector
+## one limitation of this approach is that it may also completely get rid of regions of alignments that are covered by highly overlapping alignments
+## I have not seen any case like this but it may happen
+## One way to deal with may be to make groups of overlapping alignments and keep only the longest one
