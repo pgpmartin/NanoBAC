@@ -13,6 +13,7 @@
 #'
 #' @return either NULL if \code{avar} is NULL or an object of class \code{expectedClass}
 #'
+#' @importFrom methods is
 #' @keywords internal
 #'
 #' @examples
