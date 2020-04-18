@@ -44,3 +44,4 @@ mytab <- checkBlastVar(df)
 }
 }
 }
+\keyword{internal}

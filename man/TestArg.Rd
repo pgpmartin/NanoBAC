@@ -12,6 +12,8 @@ TestArg(avar, importFUN, expectedClass, ...)
 \item{importFUN}{Function to import \code{avar} if it is a path. The function must return an object of class \code{expectedClass}}
 
 \item{expectedClass}{Character vector. expected class of the object avar}
+
+\item{...}{further arguments passed to \code{importFUN}}
 }
 \value{
 either NULL if \code{avar} is NULL or an object of class \code{expectedClass}
@@ -38,3 +40,4 @@ TestArg(Path2Blast, readBlast, "integer") #returns an error
 }
 }
 }
+\keyword{internal}

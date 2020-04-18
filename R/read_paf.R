@@ -12,7 +12,7 @@
 #' @return tibble
 #' @examples
 #' ## Example data set:
-#'     Path2paf <- system.file("extdata", "pafFileExample.paf", package = "NanoBAC")
+#'    Path2paf <- system.file("extdata", "pafFileExample.paf", package = "NanoBAC")
 #' ## Import the data (ignore the parsing failures):
 #'    mypaf <- read_paf(Path2paf)
 #'

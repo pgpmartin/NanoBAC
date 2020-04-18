@@ -33,7 +33,7 @@ AnnotateBACreads(
 
 \item{minaln}{Integer. Minimum alignment length on GeneA and GeneB}
 
-\item{MinDVDsides.}{Integer. Minimum length on each side of the vector sequence to be considered a DVD read}
+\item{MinDVDsides}{Integer. Minimum length on each side of the vector sequence to be considered a DVD read}
 }
 \value{
 A tibble
@@ -49,5 +49,43 @@ The function annotates BAC reads based on:
     }
 }
 \examples{
+
+# Using path to files:
+## Get the path of the different files:
+pathbvec <- system.file("extdata", "BAC02_BlastVector.res", package = "NanoBAC")
+pathbgnA <- system.file("extdata", "BAC02_Blast18S.res", package = "NanoBAC")
+pathbgnB <- system.file("extdata", "BAC02_Blast25S.res", package = "NanoBAC")
+pathpaf <- system.file("extdata", "BAC02_mmap2Ecoli.paf", package = "NanoBAC")
+pathRL <- system.file("extdata", "BAC02_ReadLength.tsv", package = "NanoBAC")
+pathvecseq <- system.file("extdata", "VectorSequence.fa", package = "NanoBAC")
+
+## Annotate this set of reads:
+\dontrun{
+myannot <- AnnotateBACreads(blastvec = pathbvec,
+                            blastGeneA = pathbgnA,
+                            blastGeneB = pathbgnB,
+                            pafHost = pathpaf,
+                            readLength = pathRL,
+                            vectorSequence = pathvecseq)
+}
+# Import the fles first and then use them in AnnoteBACreads:
+## Import the files:
+blastvec = readBlast(pathbvec)
+blastGeneA = readBlast(pathbgnA)
+blastGeneB = readBlast(pathbgnB)
+pafHost = suppressWarnings(read_paf(pathpaf))
+readLength = read.table(pathRL, col.names=c("ReadName", "ReadLength"),
+                        sep="\t", header = FALSE, stringsAsFactors = FALSE)
+vectorSequence = Biostrings::readDNAStringSet(pathvecseq)[[1]]
+
+## Annotate this set of reads:
+\dontrun{
+myannot <- AnnotateBACreads(blastvec = blastvec,
+                            blastGeneA = blastGeneA,
+                            blastGeneB = blastGeneA,
+                            pafHost = pafHost,
+                            readLength = readLength,
+                            vectorSequence = vectorSequence)
+}
 
 }

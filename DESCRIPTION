@@ -13,7 +13,8 @@ LazyData: true
 RoxygenNote: 7.0.2
 Depends: 
  R (>= 3.4.0)
-Imports: 
+Imports:
+    Biostrings, 
     dplyr,
     GenomeInfoDb,
     GenomicRanges,

@@ -6,7 +6,7 @@
 #'
 #' @return a Blast result table imported with the readBlast function
 #'
-#' @keyword internal
+#' @keywords internal
 #'
 #' @examples
 #' \donttest{
@@ -52,7 +52,7 @@ checkBlastVar <- function(bvar, bform="outfmt6") {
                    "SubjectStart", "SubjectEnd",
                    "evalue", "bitscore",
                    "Strand")
-      if (!is.data.frame(bvar) || colnames(bvar) != stdcoln) {
+      if (!is.data.frame(bvar) || !all(colnames(bvar) == stdcoln)) {
         stop(bvar, " is not correctly formatted. Has it been imported with the readBlast function?")
       } else {
         res <- bvar
@@ -74,10 +74,11 @@ checkBlastVar <- function(bvar, bform="outfmt6") {
 #' @param avar Either an object or a path to a file to import with \code{importFUN}
 #' @param importFUN Function to import \code{avar} if it is a path. The function must return an object of class \code{expectedClass}
 #' @param expectedClass Character vector. expected class of the object avar
+#' @param ... further arguments passed to \code{importFUN}
 #'
 #' @return either NULL if \code{avar} is NULL or an object of class \code{expectedClass}
 #'
-#' @keyword internal
+#' @keywords internal
 #'
 #' @examples
 #' \donttest{
@@ -142,10 +143,10 @@ TestArg <- function(avar, importFUN, expectedClass, ...) {
 #' @param readLength data.frame with 2 colums: ReadName and ReadLength. Provide directly the data frame or the path to the tab-delimited file containing the data (without header).
 #' @param vectorSequence Either a DNAStringSet with 1 element or the path to a fasta file
 #' @param minaln Integer. Minimum alignment length on GeneA and GeneB
-#' @param MinDVDsides. Integer. Minimum length on each side of the vector sequence to be considered a DVD read
+#' @param MinDVDsides Integer. Minimum length on each side of the vector sequence to be considered a DVD read
 #'
 #' @importFrom Biostrings readDNAStringSet
-#' @importFrom dplyr pull select distinct add_count filter rename left_join group_by top_n
+#' @importFrom dplyr pull select distinct add_count filter rename left_join group_by top_n case_when mutate_if
 #' @importFrom rlang .data
 #' @importFrom tibble as_tibble tibble
 #' @importFrom magrittr %>%
@@ -153,6 +154,7 @@ TestArg <- function(avar, importFUN, expectedClass, ...) {
 #' @importFrom GenomeInfoDb seqinfo
 #' @importFrom methods as
 #' @importFrom S4Vectors split
+#' @importFrom IRanges mean
 #'
 #' @return A tibble
 #'
@@ -160,17 +162,55 @@ TestArg <- function(avar, importFUN, expectedClass, ...) {
 #'
 #' @examples
 #'
-AnnotateBACreads <- function(
-                             blastvec,
-                             blastGeneA = NULL,
-                             blastGeneB = NULL,
-                             pafHost = NULL,
-                             minHost_mapQ = 10L,
-                             readLength = NULL,
-                             vectorSequence = NULL,
-                             minaln = 1L,
-                             MinDVDsides = 10e3L
-                             ) {
+#' # Using path to files:
+#' ## Get the path of the different files:
+#' pathbvec <- system.file("extdata", "BAC02_BlastVector.res", package = "NanoBAC")
+#' pathbgnA <- system.file("extdata", "BAC02_Blast18S.res", package = "NanoBAC")
+#' pathbgnB <- system.file("extdata", "BAC02_Blast25S.res", package = "NanoBAC")
+#' pathpaf <- system.file("extdata", "BAC02_mmap2Ecoli.paf", package = "NanoBAC")
+#' pathRL <- system.file("extdata", "BAC02_ReadLength.tsv", package = "NanoBAC")
+#' pathvecseq <- system.file("extdata", "VectorSequence.fa", package = "NanoBAC")
+#'
+#' ## Annotate this set of reads:
+#' \dontrun{
+#' myannot <- AnnotateBACreads(blastvec = pathbvec,
+#'                             blastGeneA = pathbgnA,
+#'                             blastGeneB = pathbgnB,
+#'                             pafHost = pathpaf,
+#'                             readLength = pathRL,
+#'                             vectorSequence = pathvecseq)
+#'}
+#' # Import the fles first and then use them in AnnoteBACreads:
+#' ## Import the files:
+#' blastvec = readBlast(pathbvec)
+#' blastGeneA = readBlast(pathbgnA)
+#' blastGeneB = readBlast(pathbgnB)
+#' pafHost = suppressWarnings(read_paf(pathpaf))
+#' readLength = read.table(pathRL, col.names=c("ReadName", "ReadLength"),
+#'                         sep="\t", header = FALSE, stringsAsFactors = FALSE)
+#' vectorSequence = Biostrings::readDNAStringSet(pathvecseq)[[1]]
+#'
+#' ## Annotate this set of reads:
+#' \dontrun{
+#' myannot <- AnnotateBACreads(blastvec = blastvec,
+#'                             blastGeneA = blastGeneA,
+#'                             blastGeneB = blastGeneA,
+#'                             pafHost = pafHost,
+#'                             readLength = readLength,
+#'                             vectorSequence = vectorSequence)
+#'}
+#'
+  AnnotateBACreads <- function(
+                               blastvec,
+                               blastGeneA = NULL,
+                               blastGeneB = NULL,
+                               pafHost = NULL,
+                               minHost_mapQ = 10L,
+                               readLength = NULL,
+                               vectorSequence = NULL,
+                               minaln = 1L,
+                               MinDVDsides = 10e3L
+                               ) {
 
   #---------------------
   #Test arguments and import data if necessary
@@ -183,7 +223,8 @@ AnnotateBACreads <- function(
 
     ## pafHost (minimap2 result as paf file)
     hostaln <- TestArg(pafHost,
-                       importFUN = read_paf,
+                       importFUN = function(x) {suppressMessages(
+                         suppressWarnings(read_paf(x)))},
                        expectedClass = "tbl_df")
     ExpectedPafColnames <- c("query_name", "query_length",
                              "query_start", "query_end",
@@ -280,7 +321,7 @@ AnnotateBACreads <- function(
       dplyr::select(.data$SubjectACC, .data$Strand) %>%
       dplyr::distinct() %>%
       dplyr::add_count(.data$SubjectACC) %>%
-      dplyr::filter(n==2) %>%
+      dplyr::filter(.data$n==2) %>%
       dplyr::pull(.data$SubjectACC) %>%
       as.character() %>%
       unique()
@@ -294,7 +335,7 @@ AnnotateBACreads <- function(
     vecaln <- vecaln %>%
       dplyr::filter(!(.data$SubjectACC %in%
                         ChimericReads))
-    vecalngr <- vecalngr[!(GenomicRanges::seqnames(vecalngr) %in%
+    vecalngr <- vecalngr[!(as.character(GenomicRanges::seqnames(vecalngr)) %in%
                              ChimericReads)]
 
     #---------------------
@@ -307,7 +348,8 @@ AnnotateBACreads <- function(
       dplyr::select(.data$seqnames, .data$strand) %>%
       dplyr::distinct() %>%
       dplyr::rename("ReadName" = "seqnames",
-                    "Strand" = "strand")
+                    "Strand" = "strand") %>%
+      dplyr::mutate_if(is.factor, as.character)
 
     #---------------------
     # Get the length of DNA fragments not aligned with the vector
@@ -351,7 +393,7 @@ AnnotateBACreads <- function(
     ## Coverage of the read by vector alignment
     ReadVecCov <- GenomicRanges::coverage(GenomicRanges::reduce(vecalngr))
     ## Select reads with >30% of vector alignment
-    Vreads <- names(ReadVecCov)[mean(ReadVecCov) > 0.3]
+    Vreads <- names(ReadVecCov)[IRanges::mean(ReadVecCov) > 0.3]
     ## Remove potential chimeric reads
     Vreads <- setdiff(Vreads, ChimericReads)
 
@@ -418,18 +460,18 @@ AnnotateBACreads <- function(
     rn <- RL %>% dplyr::pull(.data$ReadName)
 
 
-    res <- dplyr::left_join(as_tibble(RL),
+    restab <- dplyr::left_join(tibble::as_tibble(RL),
                             ReadStrand,
                             by = "ReadName") %>%
-      dplyr::left_join( . ,
+      dplyr::left_join(
                  tibble::tibble("ReadName" = names(NonVectorDNA_length),
                                 "DNAlength" = as.list(NonVectorDNA_length),
                                 "LongestDNA" = NonVectorDNA_Longest,
                                 "ShortestDNA" = NonVectorDNA_Shortest),
                  by = "ReadName") %>%
-      dplyr::left_join( . ,
+      dplyr::left_join(
                  tibble::tibble(ReadName = rn,
-                        ReadType = case_when(
+                        ReadType = dplyr::case_when(
                           rn %in% ChimericReads ~ "Chimeric",
                           rn %in% Dreads ~ "D",
                           rn %in% Vreads ~ "V",
@@ -450,7 +492,7 @@ AnnotateBACreads <- function(
         dplyr::pull(.data$SubjectACC) %>% unique()
 
       # Add the corresponding column to the results:
-      res <- res %>%
+      restab <- restab %>%
           dplyr::mutate(AlignedToGeneA = (.data$ReadName %in% hasGeneA))
     }
 
@@ -460,7 +502,7 @@ AnnotateBACreads <- function(
         dplyr::filter(.data$AlnLength >= minaln) %>%
         dplyr::pull(.data$SubjectACC) %>% unique()
 
-      res <- res %>%
+      restab <- restab %>%
         dplyr::mutate(AlignedToGeneB = (.data$ReadName %in% hasGeneB))
     }
 
@@ -518,8 +560,8 @@ AnnotateBACreads <- function(
         Raln <- dplyr::left_join(Raln, bestAlign, by="ReadName")
 
         # merge with the result table
-        res <- dplyr::left_join(res, Raln, by = "ReadName")
+        restab <- dplyr::left_join(restab, Raln, by = "ReadName")
       }
 
-  return(res)
+  return(restab)
 }
