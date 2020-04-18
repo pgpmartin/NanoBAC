@@ -60,15 +60,14 @@ pathRL <- system.file("extdata", "BAC02_ReadLength.tsv", package = "NanoBAC")
 pathvecseq <- system.file("extdata", "VectorSequence.fa", package = "NanoBAC")
 
 ## Annotate this set of reads:
-\dontrun{
 myannot <- AnnotateBACreads(blastvec = pathbvec,
                             blastGeneA = pathbgnA,
                             blastGeneB = pathbgnB,
                             pafHost = pathpaf,
                             readLength = pathRL,
                             vectorSequence = pathvecseq)
-}
-# Import the fles first and then use them in AnnoteBACreads:
+
+# Import the files first and then use them in AnnoteBACreads:
 ## Import the files:
 blastvec = readBlast(pathbvec)
 blastGeneA = readBlast(pathbgnA)
@@ -79,13 +78,11 @@ readLength = read.table(pathRL, col.names=c("ReadName", "ReadLength"),
 vectorSequence = Biostrings::readDNAStringSet(pathvecseq)[[1]]
 
 ## Annotate this set of reads:
-\dontrun{
 myannot <- AnnotateBACreads(blastvec = blastvec,
                             blastGeneA = blastGeneA,
                             blastGeneB = blastGeneA,
                             pafHost = pafHost,
                             readLength = readLength,
                             vectorSequence = vectorSequence)
-}
 
 }

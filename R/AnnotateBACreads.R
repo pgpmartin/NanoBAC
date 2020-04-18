@@ -172,15 +172,14 @@ TestArg <- function(avar, importFUN, expectedClass, ...) {
 #' pathvecseq <- system.file("extdata", "VectorSequence.fa", package = "NanoBAC")
 #'
 #' ## Annotate this set of reads:
-#' \dontrun{
 #' myannot <- AnnotateBACreads(blastvec = pathbvec,
 #'                             blastGeneA = pathbgnA,
 #'                             blastGeneB = pathbgnB,
 #'                             pafHost = pathpaf,
 #'                             readLength = pathRL,
 #'                             vectorSequence = pathvecseq)
-#'}
-#' # Import the fles first and then use them in AnnoteBACreads:
+#'
+#' # Import the files first and then use them in AnnoteBACreads:
 #' ## Import the files:
 #' blastvec = readBlast(pathbvec)
 #' blastGeneA = readBlast(pathbgnA)
@@ -191,14 +190,12 @@ TestArg <- function(avar, importFUN, expectedClass, ...) {
 #' vectorSequence = Biostrings::readDNAStringSet(pathvecseq)[[1]]
 #'
 #' ## Annotate this set of reads:
-#' \dontrun{
 #' myannot <- AnnotateBACreads(blastvec = blastvec,
 #'                             blastGeneA = blastGeneA,
 #'                             blastGeneB = blastGeneA,
 #'                             pafHost = pafHost,
 #'                             readLength = readLength,
 #'                             vectorSequence = vectorSequence)
-#'}
 #'
   AnnotateBACreads <- function(
                                blastvec,
@@ -234,7 +231,7 @@ TestArg <- function(avar, importFUN, expectedClass, ...) {
                              "map_length", "map_quality")
     if (!is.null(hostaln)) {
       if (ncol(hostaln) < 12 ||
-          colnames(hostaln)[1:12] != ExpectedPafColnames) {
+          !identical(colnames(hostaln)[1:12],ExpectedPafColnames)) {
         stop("pafHost does not have the expected first 12 columns")
       }
     }
@@ -247,7 +244,7 @@ TestArg <- function(avar, importFUN, expectedClass, ...) {
                   header = FALSE,
                   stringsAsFactors = FALSE,
                   col.names = c("ReadName", "ReadLength"))
-    if (ncol(RL)<2 || colnames(RL)[1:2]!=c("ReadName","ReadLength")) {
+    if (ncol(RL)<2 || !identical(colnames(RL)[1:2], c("ReadName","ReadLength"))) {
       stop("readLength does not have the ReadName and ReadLength columns")
     }
 
