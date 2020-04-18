@@ -15,14 +15,14 @@
 #' @return GRanges
 #' @examples
 #' ## Import some blast result data:
-#'     Path2Blast <- system.file("extdata", "blastExample.tab", package = "NanoBAC")
-#'     myblastResult <- NanoBAC::readBlast(Path2Blast)
+#'     Path2Blast <- system.file("extdata", "BAC02_Blast18S.res", package = "NanoBAC")
+#'     myblastResult <- readBlast(Path2Blast)
 #' ## Import a 2-column table with ReadName and ReadLength:
-#'     Path2ReadLength <- system.file("extdata", "ReadLengthExample.tsv", package = "NanoBAC")
+#'     Path2ReadLength <- system.file("extdata", "BAC02_ReadLength.tsv", package = "NanoBAC")
 #'     ReadLengthTable <- read.table(Path2ReadLength,
 #'                                   sep = "\t", header = FALSE,
-#'                                   stringsAsFactors = FALSE)
-#'     colnames(ReadLengthTable) <- c("ReadName", "ReadLength")
+#'                                   stringsAsFactors = FALSE,
+#'                                   col.names = c("ReadName", "ReadLength"))
 #' ## Convert the blast result table to a GRanges
 #'     myBlastGR <- blaST2GR(myblastResult, ReadLengthTable)
 

@@ -23,7 +23,7 @@
 #' @export
 #'
 #' @examples
-#' ## Create a GRanges. only Read1 and Read2 are DVD reads
+#' ## Create a GRanges. Only Read1 and Read2 are DVD reads
 #' ## vector is 10kb
 #' ## alignment of vector on Read2 covers 9501 bp (>95\% of vector length)
 #'   rgr <- GenomicRanges::GRanges(c("Read1:12e3-22e3",

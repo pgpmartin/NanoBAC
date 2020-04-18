@@ -25,7 +25,7 @@ VDV reads contain vector-DNA-vector sequences.
   but do not contain any alignment to the vector in the center region (i.e. excluding 1.15x the length of the vector on each side)
 }
 \examples{
-## Create a GRanges. only Read1 and Read2 are VDV reads
+## Create a GRanges. Only Read1 and Read2 are VDV reads
   rgr <- GenomicRanges::GRanges(c("Read1:1-2000", "Read1:98001-1e5",
                                   "Read2:100-1800", "Read2:99e3-1e5",
                                   "Read3:1e4-1.4e4"),

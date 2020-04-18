@@ -12,7 +12,7 @@
 #' @return a tibble
 #' @examples
 #' ## Example data set:
-#'     Path2Blast <- system.file("extdata", "blastExample.tab", package = "NanoBAC")
+#'     Path2Blast <- system.file("extdata", "BAC02_Blast18S.res", package = "NanoBAC")
 #' ## Import the data:
 #'    myblastResult <- readBlast(Path2Blast)
 #'

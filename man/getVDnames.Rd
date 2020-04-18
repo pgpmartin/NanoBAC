@@ -22,7 +22,7 @@ VD reads contain DNA-vector or vector-DNA
   The vector alignment must cover at least tolerance\% of the first (or last) EndWindow bp at the read extremity
 }
 \examples{
-## Create a GRanges. only Read1 and Read2 are VD reads
+## Create a GRanges. Only Read1 and Read2 are VD reads
 ## vector is 10kb
 ## alignment of vector on Read2 covers 410bp in the first 500bp
 ## (i.e. >80\\% but <90\\% of the first 500bp)

@@ -17,7 +17,7 @@
 #' @seealso \code{\link[NanoBAC]{read_paf}}
 #' @examples
 #' ## Example data set:
-#'     Path2paf <- system.file("extdata", "pafFileExample.paf", package = "NanoBAC")
+#'     Path2paf <- system.file("extdata", "BAC02_mmap2Ecoli.paf", package = "NanoBAC")
 #' ## Import the data (ignore the parsing failures):
 #'    mypaf <- read_paf(Path2paf)
 #' ## Convert the dataset to a GRanges focusing on the reads

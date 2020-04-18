@@ -20,14 +20,19 @@
 #'   The code for this function is based on a suggestion by Michael Lawrence: \url{https://support.bioconductor.org/p/72656/}
 #'
 #' @examples
-#' ## Example datasets
-#'   Path2OVL <- system.file("extdata", "blastExampleOverlap.tab", package = "NanoBAC")
+#' ## Example dataset. The vector has a repetitive region that systematically give multiple alignments
+#'   Path2OVL <- system.file("extdata", "BAC02_BlastVector.res", package = "NanoBAC")
 #'   alignmt <- readBlast(Path2OVL)
+#'   nrow(alignmt)
 #' ## Read lengths
-#'   rl <- data.frame(ReadName = c("BAC43R75552", "BAC43R80634"),
-#'                    ReadLength = c(11e4, 1e4))
+#'   Path2ReadLength <- system.file("extdata", "BAC02_ReadLength.tsv", package = "NanoBAC")
+#'   ReadLengthTable <- read.table(Path2ReadLength,
+#'                                 sep = "\t", header = FALSE,
+#'                                 stringsAsFactors = FALSE,
+#'                                 col.names = c("ReadName", "ReadLength"))
 #' ## Filter the data to keep alignments not overlapping on more than 50% of their length
-#'   filtaln <- alignmt[SelectSingularBlastALN(alignmt, rl),]
+#'   filtaln <- alignmt[SelectSingularBlastALN(alignmt, ReadLengthTable),]
+#'   nrow(filtaln)  #many alignments removed
 #'
 
 SelectSingularBlastALN <- function(aln,
