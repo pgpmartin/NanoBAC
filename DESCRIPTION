@@ -14,7 +14,9 @@ RoxygenNote: 7.0.2
 Depends: 
  R (>= 3.4.0)
 Imports:
-    Biostrings, 
+    BAMMtools,
+    Biostrings,
+    cluster, 
     dplyr,
     GenomeInfoDb,
     GenomicRanges,
