@@ -16,6 +16,9 @@
 #'     (i.e. that don't overlap on >threshold% of their length with other alignments)
 #'
 #' @seealso \link{readBlast}
+#'
+#' @author Pascal GP Martin
+#'
 #' @references
 #'   The code for this function is based on a suggestion by Michael Lawrence: \url{https://support.bioconductor.org/p/72656/}
 #'

@@ -43,3 +43,6 @@ The code for this function is based on a suggestion by Michael Lawrence: \url{ht
 \seealso{
 \link{readBlast}
 }
+\author{
+Pascal GP Martin
+}

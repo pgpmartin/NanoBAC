@@ -33,6 +33,8 @@
 #'
 #' @return A tibble
 #'
+#' @author Pascal GP Martin
+#'
 #' @export
 #'
 #' @examples

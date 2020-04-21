@@ -36,3 +36,6 @@ InsertLengths <- c(sample(102e3:106e3, 30),
 estimateBACsizeFromVDV(InsertLengths, method = "jenks")$BACsize
 
 }
+\author{
+Pascal GP Martin
+}

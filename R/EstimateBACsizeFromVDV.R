@@ -19,6 +19,9 @@
 #' @return tibble
 #' @details In order to use the result of this function with the \code{\link{FilterBACreads}} function
 #'           you should input the "LongestDNA" values instead of the ReadLength values for VDV reads.
+#'
+#' @author Pascal GP Martin
+#'
 #' @examples
 #' ## Generate some random insert sizes
 #' set.seed(12345)
@@ -48,10 +51,18 @@ clsmed <- list()
 if (method == "jenks") {
 
     for (i in 1:length(nclust)) {
-        bks <- BAMMtools::getJenksBreaks(vdvLength, k = nclust[i] + 1, subset = NULL)
-        clsters[,i] <- findInterval(vdvLength, bks, rightmost.closed = TRUE)
-        clsmed[[i]] <- sapply(split(vdvLength, clsters[,i]), median, na.rm=TRUE)
-        numobs <- lengths(split(clsters[,i], clsters[,i]))
+        bks <- BAMMtools::getJenksBreaks(vdvLength,
+                                         k = nclust[i] + 1,
+                                         subset = NULL)
+        clsters[,i] <- findInterval(vdvLength,
+                                    bks,
+                                    rightmost.closed = TRUE,
+                                    all.inside = TRUE)
+        clsmed[[i]] <- sapply(split(vdvLength,
+                                    clsters[,i]),
+                              median,
+                              na.rm=TRUE)
+#        numobs <- lengths(split(clsters[,i], clsters[,i])) #Number of observations per cluster
         estBACsizes[i] <- max(clsmed[[i]])
     }
 

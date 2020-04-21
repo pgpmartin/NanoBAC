@@ -86,3 +86,6 @@ myannot <- AnnotateBACreads(blastvec = blastvec,
                             vectorSequence = vectorSequence)
 
 }
+\author{
+Pascal GP Martin
+}
