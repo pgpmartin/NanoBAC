@@ -50,7 +50,17 @@
 #' pathRC <- system.file("extdata", "BAC02_ReadClass.rds", package = "NanoBAC")
 #' ## Import the data
 #' annotatedReads <- readRDS(pathRC)
-#'
+#' ## Select VDV reads that contain alignment to GeneA and GeneB
+#' myVDVreads <- selectVDVreads(ReadClass = annotatedReads,
+#'                              WithGeneA = TRUE,
+#'                              WithGeneB = TRUE)
+#' ## Same but making less clusters and producing a plot on insert length rather than read length
+#' myVDVreads <- selectVDVreads(ReadClass = annotatedReads,
+#'                              WithGeneA = TRUE,
+#'                              WithGeneB = TRUE,
+#'                              MaxClusters = 8,
+#'                              plotVar = "InsertLength")
+
 
 selectVDVreads <- function(ReadClass = NULL,
                            SizeTolerance = 0.05,
@@ -274,6 +284,7 @@ pp <- newdf %>%
                    ) +
     ggplot2::facet_grid(cols = ggplot2::vars(.data$PlotType))
 
+print(pp)
   }
 
   if (makePlot) {

@@ -61,7 +61,16 @@ then the selected VDV reads do not align to the host genome
 pathRC <- system.file("extdata", "BAC02_ReadClass.rds", package = "NanoBAC")
 ## Import the data
 annotatedReads <- readRDS(pathRC)
-
+## Select VDV reads that contain alignment to GeneA and GeneB
+myVDVreads <- selectVDVreads(ReadClass = annotatedReads,
+                             WithGeneA = TRUE,
+                             WithGeneB = TRUE)
+## Same but making less clusters and producing a plot on insert length rather than read length
+myVDVreads <- selectVDVreads(ReadClass = annotatedReads,
+                             WithGeneA = TRUE,
+                             WithGeneB = TRUE,
+                             MaxClusters = 8,
+                             plotVar = "InsertLength")
 }
 \author{
 Pascal GP Martin
