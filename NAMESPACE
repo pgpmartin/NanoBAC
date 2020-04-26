@@ -2,10 +2,10 @@
 
 export(AnnotateBACreads)
 export(FilterBACreads)
-export(FindVDVjunctions)
 export(SelectSingularBlastALN)
 export(blaST2GR)
 export(estimateBACsizeFromVDV)
+export(findVDVjunctions)
 export(getDVDnames)
 export(getVDVnames)
 export(getVDnames)

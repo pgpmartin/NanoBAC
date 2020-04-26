@@ -1,5 +1,15 @@
 #' Find the vector-insert junctions at the beginning and end of a VDV read
 #'
+#' The function does the following:
+#'   \enumerate{
+#'     \item At both ends of the read, search for the restriction site
+#'           at the position where the vector-insert junction is expected to be found
+#'     \item If the restriction site is not found, then search for the vector
+#'           sequence just adjacent to the restriction site in a slighly wider window
+#'     \item (optional) at these junctions, replace the observed vector sequence
+#'           by the full (and true) vector sequence
+#'   }
+#'
 #' @param ReadName character string. Name of the read
 #' @param ReadDNA A DNAString or DNAStringSet with the read sequence
 #' @param ReadVecAlign Table with the Blast results from aligning th evector on the read
@@ -13,6 +23,9 @@
 #'                               then the algorithm will try to search for the vector sequence of length
 #'                               \code{SideSeqSearch} bp that is adjacent to the restriction site
 #'                               (Default to 10 bp)
+#' @param replaceVectorSequence Logical. If TRUE, the function will replace the vector sequence in the read
+#'                                       by the true vector sequence, using the junction has been identified.
+#'                                       If no junction is identified, then no sequence is replaced
 #'
 #' @importFrom magrittr %>%
 #' @importFrom dplyr filter top_n mutate pull
@@ -24,7 +37,14 @@
 #'
 #' @export
 #'
-#' @return a named character vector with the read name, the read strand and the coordinates of the first and last bases of the insert
+#' @return a list with the following elements:
+#'    \itemize{
+#'        \item{"ReadName"}{Name of the read}
+#'        \item{"Strand"}{"Strand of the read (based on vector alignment)}
+#'        \item{"InsertStart"}{Location of the first base of insert sequence (if NA, no vector-insert junction has been detected)}
+#'        \item{"InsertEnd"}{Location of the last base of insert sequence (if NA, no vector-insert junction has been detected)}
+#'        \item{"correctedRead"}{(Optional) if \code{replaceVectorSequence} is TRUE, this sequence contains the true vector sequence in the read}
+#'    }
 #'
 #' @examples
 #' # Some dummy sequences (use paste0 for clarity / comparison of sequences):
@@ -48,17 +68,25 @@
 #'                                       "juncEx_vec_noisyread.res",
 #'                                       package = "NanoBAC"))
 #' # Get the coordinates of the insert sequence:
-#' FindVDVjunctions("read", read, readaln, "A^AGCTT", vector)
-#' # With the noisy read, the restriction site is not found but an adjacent sequence is:
-#' FindVDVjunctions("noisyread", noisyread, noisyreadaln, "A^AGCTT", vector)
+#' findVDVjunctions("read", read, readaln, "A^AGCTT", vector,
+#'                  replaceVectorSequence = FALSE)
+#' # With the noisy read, the restriction site is not found at
+#' #   the end of the read but an adjacent sequence is:
+#' findVDVjunctions("noisyread", noisyread, noisyreadaln, "A^AGCTT", vector,
+#'                  replaceVectorSequence = FALSE)
+#' # Get the read sequence after replacing the vector sequence
+#' #   by the full vector sequence on both sides
+#' findVDVjunctions("noisyread", noisyread, noisyreadaln, "A^AGCTT", vector,
+#'                  replaceVectorSequence = TRUE)$correctedRead
 
-FindVDVjunctions <- function(ReadName = NULL,
+findVDVjunctions <- function(ReadName = NULL,
                              ReadDNA,
                              ReadVecAlign,
                              RestrictionSite = "G^AATTC",
                              VectorSequence = NULL,
                              UnalignedVectorLength = 1000L,
-                             SideSeqSearch = 10L) {
+                             SideSeqSearch = 10L,
+                             replaceVectorSequence = TRUE) {
 
 
   #---------------------
@@ -459,10 +487,97 @@ FindVDVjunctions <- function(ReadName = NULL,
         }
     }
 
+    #----------------------------------------
+    # Replace the vector sequence
+    #----------------------------------------
+
+  if  (replaceVectorSequence) {
+    ## If no junction is found at beginning and end of the read:
+    ##  then don't replace anything
+    if (is.na(JuncAtBegin) && is.na(JuncAtEnd)) {
+      newRead <- ReadDNA[[rnn]]
+    }
+
+    ## If no junction is found at the beginning of the read:
+    ## Then replace only one side
+    if (is.na(JuncAtBegin) && !is.na(JuncAtEnd)) {
+      if (readStrand == "+") {
+        newRead <- Biostrings::DNAString(paste0(
+          Biostrings::subseq(ReadDNA[[rnn]], 1, JuncAtEnd),
+          VectorSequence
+        ))
+      } else {
+        newRead <- Biostrings::DNAString(paste0(
+          VectorSequence,
+          Biostrings::reverseComplement(Biostrings::subseq(ReadDNA[[rnn]],
+                                                           1,
+                                                           JuncAtEnd))
+        ))
+      }
+    }
+
+    ## If no junction is found at the end of the read:
+    ## Then replace only one side
+    if (!is.na(JuncAtBegin) && is.na(JuncAtEnd)) {
+      if (readStrand == "+") {
+        newRead <- Biostrings::DNAString(paste0(
+          VectorSequence,
+          Biostrings::subseq(ReadDNA[[rnn]],
+                             JuncAtBegin,
+                             length(ReadDNA[[rnn]]))
+        ))
+      } else {
+        newRead <- Biostrings::DNAString(paste0(
+          Biostrings::reverseComplement(Biostrings::subseq(
+            ReadDNA[[rnn]],
+            JuncAtBegin,
+            length(ReadDNA[[rnn]]))),
+          VectorSequence
+        ))
+      }
+    }
+
+    ## If a junction is found at both the beginning and the end of the read
+    ## Then replace th evector sequence on both sides
+    if (!is.na(JuncAtBegin) && !is.na(JuncAtEnd)) {
+      if (readStrand == "+") {
+        newRead <- Biostrings::DNAString(paste0(
+          VectorSequence,
+          Biostrings::subseq(ReadDNA[[rnn]],
+                             JuncAtBegin,
+                             JuncAtEnd),
+          VectorSequence
+        ))
+      } else {
+        newRead <- Biostrings::DNAString(paste0(
+          VectorSequence,
+          Biostrings::reverseComplement(Biostrings::subseq(
+            ReadDNA[[rnn]],
+            JuncAtBegin,
+            JuncAtEnd)),
+          VectorSequence
+        ))
+      }
+    }
+  }
+
+
 # For each read, report the base at which the junction occurs with the vector and where it ends
-  c("ReadName" = rnn,
-    "Strand" = readStrand,
-    "InsertStart" = JuncAtBegin,
-    "InsertEnd" = JuncAtEnd)
+if (replaceVectorSequence) {
+  return(
+    list("ReadName" = rnn,
+         "Strand" = readStrand,
+         "InsertStart" = JuncAtBegin,
+         "InsertEnd" = JuncAtEnd,
+         "correctedRead" = newRead)
+  )
+} else {
+  return(
+    list("ReadName" = rnn,
+         "Strand" = readStrand,
+         "InsertStart" = JuncAtBegin,
+         "InsertEnd" = JuncAtEnd)
+  )
+}
 
 }
