@@ -29,6 +29,7 @@ Imports:
     rlang,
     S4Vectors,
     scales,
+    seqinr,
     stats,
     stringr,
     tibble,
