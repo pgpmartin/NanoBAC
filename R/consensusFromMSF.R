@@ -1,7 +1,7 @@
 #' Obtain the consensus sequence from an MSF file
 #'
 #' @param msfALN Character string. Path to an MSF file obtained with a multiple aligment program
-#' @param gapthreshold Numeric in ]0,1[. (Default is 0.5)
+#' @param threshold Numeric in ]0,1[. (Default is 0.5)
 #' @param removegaps Logical. Should the gaps be removed in the output sequence? (Default is TRUE)
 #' @param consname Character string. Name of the consensus sequence. (Default is "cons")
 #'
@@ -14,9 +14,13 @@
 #' @export
 #'
 #' @examples
+#' ## example msf file (obtained with kalign2 using the varseq100.fa file)
+#' exMSFfile <- system.file("extdata", "varseq100.msf", package = "NanoBAC")
+#' ## get the consensus sequence
+#' consensusFromMSF(exMSFfile)
 #'
 consensusFromMSF <- function(msfALN = NULL,
-                             gapthreshold = 0.5,
+                             threshold = 0.5,
                              removegaps = TRUE,
                              consname = "cons") {
 
@@ -31,12 +35,12 @@ consensusFromMSF <- function(msfALN = NULL,
     stop("File ", msfALN, " not found")
   }
 
-  gapthreshold <- as.numeric(gapthreshold)
-  if (gapthreshold<0) {
-    stop("gapthreshold cannot be negative")
+  threshold <- as.numeric(threshold)
+  if (threshold<0) {
+    stop("threshold cannot be negative")
   }
-  if (gapthreshold>1) {
-    stop("gapthreshold cannot be > 1")
+  if (threshold>1) {
+    stop("threshold cannot be > 1")
   }
 
   #---------------------
@@ -51,21 +55,15 @@ consensusFromMSF <- function(msfALN = NULL,
   # Also possible to use the msa::msaConvertfunction but would add a dependency
 
   #---------------------
-  # get the consensus matrix
+  # get the consensus String
   #---------------------
 
-  mmat <- Biostrings::consensusMatrix(msf)
+  cons <- Biostrings::consensusString(msf,
+                                      ambiguityMap="N",
+                                      threshold = threshold)
 
   #---------------------
-  # Obtain the consensus
-  #---------------------
-
-  cons <- consmat2seq(mmat,
-                      ambiguityLetter = "N",
-                      threshold = gapthreshold)
-
-  #---------------------
-  # Convert to a DNAStringSet
+  # Convert to a DNAStringSet and remove gaps if required
   #---------------------
   if (removegaps) {
     cons <- Biostrings::DNAStringSet(gsub("-", "", cons))

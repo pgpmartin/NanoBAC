@@ -27,14 +27,19 @@ function that:
   \item uses only the non gap sequences to evaluate the \% of each letter at a given position
 }
 Note that the function will not work if one of the base A, T, G or C or
-if the gap "-" is completely absent from the alignment
+if the gap "-" is completely absent from the alignment.
+Surprisingly, the \code{\link[Biostrings]{consensusString}} function does not give identical
+results when used on a \code{DNAalignment} object or a frequency matrix given
+by \code{consensusMatrix} with \code{prob=TRUE}. Using the default values,
+this function will give the same result as
+\code{consensusString(DNAalignment-object, ambiguityMap="N", threshold=0.5)}.
 }
 \examples{
 # Create a function to compare the consmat2seq and the consensusString functions:
 ccons <- function(intmat) {
     print(Biostrings::consensusString(intmat / colSums(intmat),
                                       "N", threshold = 0.5))
-    print(consmat2seq(intmat, "N", threshold = 0.5))
+    print(NanoBAC:::consmat2seq(intmat, "N", threshold = 0.5))
     }
 # Create a simple matrix:
 consmat <- matrix(c(10L, 0L, 0L, 0L, 0L, 0L,
@@ -58,3 +63,4 @@ consmat[,3] <- c(4L, 2L, 1L, 1L, 1L, 1L)
 ccons(consmat) #same
 
 }
+\keyword{internal}

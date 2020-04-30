@@ -1,0 +1,60 @@
+PileUp
+
+
+
+   MSF:   124  Type: P    Check:  7038   ..
+
+ Name: refseq     Len:   124  Check:  2349  Weight:  1.00
+ Name: varseq1    Len:   124  Check:  2349  Weight:  1.00
+ Name: varseq2    Len:   124  Check:  2349  Weight:  1.00
+ Name: varseq3    Len:   124  Check:  2349  Weight:  1.00
+ Name: varseq4    Len:   124  Check:  2349  Weight:  1.00
+ Name: varseq5    Len:   124  Check:  2349  Weight:  1.00
+ Name: varseq6    Len:   124  Check:  2349  Weight:  1.00
+ Name: varseq7    Len:   124  Check:  2349  Weight:  1.00
+ Name: varseq8    Len:   124  Check:  2349  Weight:  1.00
+ Name: varseq9    Len:   124  Check:  2349  Weight:  1.00
+ Name: varseq10   Len:   124  Check:  2349  Weight:  1.00
+
+
+//
+
+refseq     T-GC-TCCTA GC-CT-TG-T GTTACCG--T TACCC-TCGA TACCTGCC-- TCTC---GCA 
+varseq1    G-TG-CTCTA GC-CTATG-T GGTTCCG--T TCCCT-TTGA TATCCTGGC- TCTCGCTAGC 
+varseq2    T--C-CTCTA GC-CT----T TTAACCG-TT AACCC-TCGA TCGCTGCA-- CTTGCGCACG 
+varseq3    C-TG-CTCCT AC-CT-AG-T GTTACCG--T TACCCCTCGA TACCCTCC-- ACCC---GCA 
+varseq4    T-TG-CGCTC TCGCC-TG-T GTGTACG--T TACCC-TCGT ACCGCTAC-- GTTC---GGA 
+varseq5    G-GCTTCCTA GC-CT-TG-T AGTTACC--G ACCTC-TAGA TACCTCCCGT TCAC---ACC 
+varseq6    T-AC-TCCTA GC-AT-GA-C TTTACCG--T ATACC-TCGA ATCCTGCC-- TCAC---CAC 
+varseq7    G-TG-TCCCT AG-CG-TG-T GTGACTC--G TACC--TGAA TGCTCTGCA- GCAG-ACGTA 
+varseq8    CAGC-TCCCA GA-CT-AGCG TGCACCG-TT TACCC-TCGA TCTGCCAA-- CCTG---ACA 
+varseq9    G-TGCCCCTA TC-CT-TG-T GTTTCCGCTT ACTCC-TCGA TACCCTGCG- TGGC---ACA 
+varseq10   G-G--CCCTA TC-GT-TG-T GTTACGG--T TCA---TGAT TACCTGCC-- ACCC---TCA 
+
+
+refseq     CACCGTAAGG AG-A--ATTG GAGGAT--CG ACGC-TCGAT --GGTGG-GT -GGGATGCCT 
+varseq1    AACCG-TAAG GG-G--TAAT TGGGAT--AG ACG--TCGAT ----CGG-TT -GTGTGGACG 
+varseq2    ACCGT-AAGA AG-ATCTTGT GAGGATCGCG GCTG-GATGC --GTGTG-AT -CGGATGCTA 
+varseq3    -AC---GAAG AG-A--ATTG GAGGAT--CA ACGCATCGAT CCGTTGG-GG AGGGATGCTC 
+varseq4    CACCG-TAAG GA-A--ATTG GCGGGT--CG ACCG-TCGAT --TGTGG-GT -GGATTGCCT 
+varseq5    CGTTT-GGAG AT-A--GTGG AGGACT--CT AACCCTCGAT --GAGTG-GT -GGGATGCCT 
+varseq6    TACTT-TAGG GA-A--TTTG CAGAAA--CG ACGACTAGAT --GGTGG-GT -GGGATGCCT 
+varseq7    AAGCA-AAGT AA-G--GTTC AGAGCG--CC TCGA-TGGCT --GGTGG--- -GGATCGCCC 
+varseq8    CACGT-AAGT AG-A----AT GAGGAT--CG ATTC-GGTGG --GTAAG-GT -GGGATGCCG 
+varseq9    CGCGG-ACGG AG-A--ATTC GGATCA--CG CCG--TGGGT --GGCAA-GC -GGATGCCTC 
+varseq10   CACGT-AAGG AGCA--ATTG GAGGGT--CA ACGC-TCGAT --GGTGGCGT -CGACTGCCT 
+
+
+refseq     -ACC
+varseq1    -CCT
+varseq2    --CC
+varseq3    -TAC
+varseq4    GACC
+varseq5    -ACC
+varseq6    -ACC
+varseq7    ACTT
+varseq8    -TCC
+varseq9    -ACC
+varseq10   TACC
+
+

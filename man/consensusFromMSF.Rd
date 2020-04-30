@@ -6,7 +6,7 @@
 \usage{
 consensusFromMSF(
   msfALN = NULL,
-  gapthreshold = 0.5,
+  threshold = 0.5,
   removegaps = TRUE,
   consname = "cons"
 )
@@ -14,7 +14,7 @@ consensusFromMSF(
 \arguments{
 \item{msfALN}{Character string. Path to an MSF file obtained with a multiple aligment program}
 
-\item{gapthreshold}{Numeric in ]0,1[. (Default is 0.5)}
+\item{threshold}{Numeric in ]0,1[. (Default is 0.5)}
 
 \item{removegaps}{Logical. Should the gaps be removed in the output sequence? (Default is TRUE)}
 
@@ -27,5 +27,9 @@ A DNAStringSet of length 1 with the consensus sequence
 Obtain the consensus sequence from an MSF file
 }
 \examples{
+## example msf file (obtained with kalign2 using the varseq100.fa file)
+exMSFfile <- system.file("extdata", "varseq100.msf", package = "NanoBAC")
+## get the consensus sequence
+consensusFromMSF(exMSFfile)
 
 }
