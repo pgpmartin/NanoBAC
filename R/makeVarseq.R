@@ -20,6 +20,7 @@
 #' @importFrom stats runif
 #' @importFrom methods is
 #' @importFrom R.utils insert
+#' @importFrom stringi stri_rand_strings
 #'
 #' @export
 #'
@@ -33,9 +34,9 @@
 
 makeVarseq <- function(dnaseq,
                        lettrs = c("A", "T", "G", "C"),
-                       subst = c(0.03, 0.06),
-                       del = c(0.01, 0.05),
-                       ins = c(0.01, 0.05),
+                       subst = c(0.01, 0.04),
+                       del = c(0.01, 0.02),
+                       ins = c(0.0075, 0.0125),
                        returnString = TRUE) {
 
   #convert dnaseq to a list of individual chararacters
@@ -87,6 +88,12 @@ makeVarseq <- function(dnaseq,
   }
   ins <- c(min(ins), max(ins))
 
+  #insertion/deletion size probabilities
+  indelSizeRange <- 1:15
+  indelSizeProbs <- c(0.67, 0.22, 0.07, 0.02, 0.007, 0.002, 0.001,
+                      4e-4, 2.6e-4, 7.6e-5, 4.9e-5, 3.3e-5, 2.7e-5,
+                      2.17e-5, 1.6e-5)
+  ## This is close to what we observed in our Nanopore data
 
   #number of characters
   lseq <- length(dnaseq)
@@ -103,20 +110,45 @@ makeVarseq <- function(dnaseq,
   dnares[subpos] <- sample(lettrs, numsub, replace = TRUE)
 
   # Remove bases (deletions)
-  numdel <- round(runif(1, del[1], del[2])*lseq, 0)
-  dnares <- dnares[-sample.int(lseq, numdel)]
+  numdel <- round(runif(n = 1,
+                        min = del[1],
+                        max = del[2]) * lseq, 0) # number of deletions
+  delpos <- sample.int(lseq, numdel) # position of deletions
+  dellen <- sample(indelSizeRange,
+                   numdel,
+                   prob = indelSizeProbs,
+                   replace = TRUE) # length of the deletions
+  delpos2 <- unique(as.integer(
+    rep(delpos, times = dellen) +
+      sequence(dellen) - 1)) #final positions to delete
+  dnares <- dnares[-delpos2]
 
   #Add bases (insertions)
-  numins <- round(runif(1, ins[1], ins[2]) * lseq, 0) # number of insertions
+  numins <- round(runif(n = 1,
+                        min = ins[1],
+                        max = ins[2]) * lseq, 0) # number of insertions
   inspos <- sample.int(length(dnares), numins) #position of the insertions
-  dnares <- R.utils::insert(dnares, inspos,
-                            values = sample(lettrs, numins, replace = TRUE),
+  inslen <- sample(indelSizeRange,
+                   numins,
+                   prob = indelSizeProbs,
+                   replace = TRUE) #length of the insertions
+  inseq <- stringi::stri_rand_strings(n =numins,
+                                      length = inslen,
+                                      pattern = paste0("[",
+                                                      paste0(lettrs,
+                                                             collapse=""),
+                                                      "]",
+                                                      collapse = ""))
+  dnares <- R.utils::insert(x = dnares,
+                            at = inspos,
+                            values = inseq,
                             useNames = FALSE)
 
   ## Return the result
   if (returnString) {
     return(paste0(dnares, collapse = ""))
   } else {
+    dnares <- unlist(strsplit(dnares, ""), use.names = FALSE)
     return(dnares)
   }
 }

@@ -7,9 +7,9 @@
 makeVarseq(
   dnaseq,
   lettrs = c("A", "T", "G", "C"),
-  subst = c(0.03, 0.06),
-  del = c(0.01, 0.05),
-  ins = c(0.01, 0.05),
+  subst = c(0.01, 0.04),
+  del = c(0.01, 0.02),
+  ins = c(0.0075, 0.0125),
   returnString = TRUE
 )
 }

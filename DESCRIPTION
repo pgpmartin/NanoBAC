@@ -33,6 +33,7 @@ Imports:
     seqinr,
     stats,
     stringr,
+    stringi,
     tibble,
     tidyselect,
     utils
