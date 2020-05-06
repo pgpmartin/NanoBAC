@@ -1,5 +1,8 @@
 #' Introduce variations in a DNA sequence
 #'
+#' Default values for \% of variations (insertion, deletion, mismatches) are defined
+#' based on the 5th and 95th percentile of values observed from a MinION run
+#'
 #' @param dnaseq Either a character string, a DNAString or a character vector with individual characters.
 #'               The DNA sequence in which variations are introduced
 #' @param lettrs character vector
@@ -34,9 +37,9 @@
 
 makeVarseq <- function(dnaseq,
                        lettrs = c("A", "T", "G", "C"),
-                       subst = c(0.01, 0.04),
-                       del = c(0.01, 0.02),
-                       ins = c(0.0075, 0.0125),
+                       subst = c(0.014, 0.052),
+                       del = c(0.011, 0.023),
+                       ins = c(0.006, 0.014),
                        returnString = TRUE) {
 
   #convert dnaseq to a list of individual chararacters
