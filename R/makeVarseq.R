@@ -15,9 +15,9 @@
 #' @param ins numeric vector of length 2 with values in [0,1].
 #'            Percentage of insertions (upper and lower bounds).
 #'            Default is 1-5\% insertions.
-#' @param returnString Logical. Should the function return a single character string?
+#' @param returnString Logical. Should the function return a single character string? (Default is TRUE)
 #'
-#' @return either a vector of individual characters
+#' @return Either a vector of individual characters (if \code{returnString==FALSE})
 #'         or a single character string if \code{returnString==TRUE}
 #'
 #' @importFrom stats runif
@@ -34,6 +34,14 @@
 #'            subst = c(0.08, 0.12),
 #'            del = c(0.08, 0.12),
 #'            ins = c(0.08, 0.12))
+#'
+#' ## The function will not verify if the string is a canonical DNA string
+#' ## thus, it can be used to modify any string:
+#' makeVarseq("ABCDEFGHIJKLMNOPQRSTUVWXYZ+-!.?",
+#'            lettrs=letters,
+#'            subst=c(0.05,0.1),
+#'            del=c(0.02,0.1),
+#'            ins=c(0.02, 0.06))
 
 makeVarseq <- function(dnaseq,
                        lettrs = c("A", "T", "G", "C"),
@@ -109,43 +117,50 @@ makeVarseq <- function(dnaseq,
   numsub <- round(runif(1, subst[1], subst[2]) *
                     length(lettrs) /
                     (length(lettrs)-1) * lseq, 0) # number of substitutions
-  subpos <- sample.int(lseq, numsub) #position of the substitutions
-  dnares[subpos] <- sample(lettrs, numsub, replace = TRUE)
+  if (numsub > 0) {
+    subpos <- sample.int(lseq, numsub) #position of the substitutions
+    dnares[subpos] <- sample(lettrs, numsub, replace = TRUE)
+  }
 
   # Remove bases (deletions)
   numdel <- round(runif(n = 1,
                         min = del[1],
                         max = del[2]) * lseq, 0) # number of deletions
-  delpos <- sample.int(lseq, numdel) # position of deletions
-  dellen <- sample(indelSizeRange,
-                   numdel,
-                   prob = indelSizeProbs,
-                   replace = TRUE) # length of the deletions
-  delpos2 <- unique(as.integer(
-    rep(delpos, times = dellen) +
-      sequence(dellen) - 1)) #final positions to delete
-  dnares <- dnares[-delpos2]
+  if (numdel > 0) {
+    delpos <- sample.int(lseq, numdel) # position of deletions
+    dellen <- sample(indelSizeRange,
+                     numdel,
+                     prob = indelSizeProbs,
+                     replace = TRUE) # length of the deletions
+    delpos2 <- unique(as.integer(
+      rep(delpos, times = dellen) +
+        sequence(dellen) - 1)) #final positions to delete
+    dnares <- dnares[-delpos2]
+  }
 
   #Add bases (insertions)
   numins <- round(runif(n = 1,
                         min = ins[1],
                         max = ins[2]) * lseq, 0) # number of insertions
-  inspos <- sample.int(length(dnares), numins) #position of the insertions
-  inslen <- sample(indelSizeRange,
-                   numins,
-                   prob = indelSizeProbs,
-                   replace = TRUE) #length of the insertions
-  inseq <- stringi::stri_rand_strings(n =numins,
-                                      length = inslen,
-                                      pattern = paste0("[",
-                                                      paste0(lettrs,
-                                                             collapse=""),
-                                                      "]",
-                                                      collapse = ""))
-  dnares <- R.utils::insert(x = dnares,
-                            at = inspos,
-                            values = inseq,
-                            useNames = FALSE)
+
+  if (numins > 0) {
+    inspos <- sample.int(length(dnares), numins) #position of the insertions
+    inslen <- sample(indelSizeRange,
+                     numins,
+                     prob = indelSizeProbs,
+                     replace = TRUE) #length of the insertions
+    inseq <- stringi::stri_rand_strings(n =numins,
+                                        length = inslen,
+                                        pattern = paste0("[",
+                                                        paste0(lettrs,
+                                                               collapse=""),
+                                                        "]",
+                                                        collapse = ""))
+    dnares <- R.utils::insert(x = dnares,
+                              at = inspos,
+                              values = inseq,
+                              useNames = FALSE)
+  }
 
   ## Return the result
   if (returnString) {

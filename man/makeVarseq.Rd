@@ -7,9 +7,9 @@
 makeVarseq(
   dnaseq,
   lettrs = c("A", "T", "G", "C"),
-  subst = c(0.01, 0.04),
-  del = c(0.01, 0.02),
-  ins = c(0.0075, 0.0125),
+  subst = c(0.014, 0.052),
+  del = c(0.011, 0.023),
+  ins = c(0.006, 0.014),
   returnString = TRUE
 )
 }
@@ -31,14 +31,15 @@ Default is 1-5\% deletion.}
 Percentage of insertions (upper and lower bounds).
 Default is 1-5\% insertions.}
 
-\item{returnString}{Logical. Should the function return a single character string?}
+\item{returnString}{Logical. Should the function return a single character string? (Default is TRUE)}
 }
 \value{
-either a vector of individual characters
+Either a vector of individual characters (if \code{returnString==FALSE})
         or a single character string if \code{returnString==TRUE}
 }
 \description{
-Introduce variations in a DNA sequence
+Default values for \% of variations (insertion, deletion, mismatches) are defined
+based on the 5th and 95th percentile of values observed from a MinION run
 }
 \examples{
 set.seed(12345) # for reproducibility
@@ -47,4 +48,12 @@ makeVarseq("ATGCATGCATGCATGCATGCATGC",
            subst = c(0.08, 0.12),
            del = c(0.08, 0.12),
            ins = c(0.08, 0.12))
+
+## The function will not verify if the string is a canonical DNA string
+## thus, it can be used to modify any string:
+makeVarseq("ABCDEFGHIJKLMNOPQRSTUVWXYZ+-!.?",
+           lettrs=letters,
+           subst=c(0.05,0.1),
+           del=c(0.02,0.1),
+           ins=c(0.02, 0.06))
 }
