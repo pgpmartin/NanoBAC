@@ -12,7 +12,8 @@ consensusFromMSF(
 )
 }
 \arguments{
-\item{msfALN}{Character string. Path to an MSF file obtained with a multiple aligment program}
+\item{msfALN}{Character string. Path to an MSF file obtained with a multiple aligment program
+Note that the function also works if msfALN points to a fasta file (with .fa extension)}
 
 \item{threshold}{Numeric in ]0,1[. (Default is 0.5)}
 

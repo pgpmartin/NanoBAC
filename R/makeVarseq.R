@@ -8,13 +8,13 @@
 #' @param lettrs character vector
 #' @param subst numeric vector of length 2 with values in [0,1].
 #'              Percentage of substitutions (upper and lower bounds).
-#'              Default is 3-6\% substition.
+#'              Default is 1.4-5.2\% substition.
 #' @param del numeric vector of length 2 with values in [0,1].
 #'            Percentage of deletions (upper and lower bounds).
-#'            Default is 1-5\% deletion.
+#'            Default is 1.1-2.3\% deletion.
 #' @param ins numeric vector of length 2 with values in [0,1].
 #'            Percentage of insertions (upper and lower bounds).
-#'            Default is 1-5\% insertions.
+#'            Default is 0.6-1.4\% insertions.
 #' @param returnString Logical. Should the function return a single character string? (Default is TRUE)
 #'
 #' @return Either a vector of individual characters (if \code{returnString==FALSE})

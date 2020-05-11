@@ -1,6 +1,7 @@
 #' Obtain the consensus sequence from an MSF file
 #'
 #' @param msfALN Character string. Path to an MSF file obtained with a multiple aligment program
+#'               Note that the function also works if msfALN points to a fasta file (with .fa extension)
 #' @param threshold Numeric in ]0,1[. (Default is 0.5)
 #' @param removegaps Logical. Should the gaps be removed in the output sequence? (Default is TRUE)
 #' @param consname Character string. Name of the consensus sequence. (Default is "cons")
@@ -8,7 +9,7 @@
 #' @return A DNAStringSet of length 1 with the consensus sequence
 #'
 #' @importFrom seqinr read.alignment
-#' @importFrom Biostrings DNAMultipleAlignment consensusMatrix DNAStringSet
+#' @importFrom Biostrings DNAMultipleAlignment consensusMatrix DNAStringSet readDNAMultipleAlignment
 #' @importClassesFrom Biostrings DNAStringSet
 #'
 #' @export
@@ -45,14 +46,27 @@ consensusFromMSF <- function(msfALN = NULL,
 
   #---------------------
   # import the multiple alignment MSF file
+  # If msfALN has a .fa extension, it will be imported too (as a fasta file)
   #---------------------
-  msf <- seqinr::read.alignment(msfALN,
-                                format = "msf",
-                                forceToLower = FALSE)
-  seqs <- msf$seq
-  names(seqs) <- msf$nam
-  msf <- Biostrings::DNAMultipleAlignment(seqs, use.names=TRUE)
-  # Also possible to use the msa::msaConvertfunction but would add a dependency
+## These 2 commands copied from tools::file_ext to avoid package dependence:
+  msfExtpos <- regexpr("\\.([[:alnum:]]+)$", basename(msfALN))
+  msfExt <- ifelse(msfExtpos > -1L,
+                   substring(basename(msfALN),
+                             msfExtpos + 1L), "")
+
+  if (msfExt == "fa") {
+    msf <- Biostrings::readDNAMultipleAlignment(msfALN,
+                                                format = "fasta")
+  } else {
+    msf <- seqinr::read.alignment(msfALN,
+                                  format = "msf",
+                                  forceToLower = FALSE)
+    seqs <- gsub("~", "-", msf$seq, fixed = TRUE)
+    seqs <- gsub(".", "-", seqs, fixed = TRUE)
+    names(seqs) <- msf$nam
+    msf <- Biostrings::DNAMultipleAlignment(seqs, use.names=TRUE)
+  # Also possible to use the msa::msaConvertfunction but would add a dependency to the heavy msa package
+  }
 
   #---------------------
   # get the consensus String
