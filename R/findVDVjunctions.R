@@ -12,7 +12,7 @@
 #'
 #' @param ReadName character string. Name of the read
 #' @param ReadDNA A DNAString or DNAStringSet with the read sequence
-#' @param ReadVecAlign Table with the Blast results from aligning th evector on the read
+#' @param ReadVecAlign Table with the Blast results from aligning the vector on the read
 #' @param RestrictionSite Character string in the for "G^AATTC" indicating the sequence and the cut site
 #' @param VectorSequence A DNAString or DNAStringSet of length 1 with the vector sequence starting and ending
 #'                       with the full sequence of the restriction site used for cloning
@@ -538,7 +538,7 @@ findVDVjunctions <- function(ReadName = NULL,
     }
 
     ## If a junction is found at both the beginning and the end of the read
-    ## Then replace th evector sequence on both sides
+    ## Then replace the vector sequence on both sides
     if (!is.na(JuncAtBegin) && !is.na(JuncAtEnd)) {
       if (readStrand == "+") {
         newRead <- Biostrings::DNAString(paste0(

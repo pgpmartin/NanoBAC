@@ -20,7 +20,7 @@ findVDVjunctions(
 
 \item{ReadDNA}{A DNAString or DNAStringSet with the read sequence}
 
-\item{ReadVecAlign}{Table with the Blast results from aligning th evector on the read}
+\item{ReadVecAlign}{Table with the Blast results from aligning the vector on the read}
 
 \item{RestrictionSite}{Character string in the for "G^AATTC" indicating the sequence and the cut site}
 
