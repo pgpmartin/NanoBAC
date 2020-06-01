@@ -30,7 +30,13 @@ or a path to a fasta file containing these sequences}
 \item{MinDNAlength}{Integer. Minimum length of the DNA fragment to keep the reads in the results}
 }
 \value{
-A DNAStringSet with the split reads
+A list with:
+    \itemize{
+        \item{ReadDefinition}{ a \code{DNAStringSet} with the split reads}
+        \item{ReadSequence}{ a \code{GRanges} object with the definition of the DV/VD reads}
+    }
+    Note that reads with alignment on the opposite strand of the vector ("-" strand)
+    are automatically reverse complemented
 }
 \description{
 The function does the following:
@@ -45,7 +51,7 @@ By default, if alignemnt to the host genome is provided in the \code{ReadClass} 
 then the selected DVD reads are selected to not show any significant alignment to the host genome
 }
 \examples{
-## For simplicity (and to limit file size) we only keep the data for 5 pres-selected DVD reads
+## For simplicity (and to limit file size) we only keep the data for 5 pre-selected DVD reads
 ## Path to file (.rds) created with the AnnotateBACreads function
 pathRC <- system.file("extdata", "BAC02_ReadClass.rds", package = "NanoBAC")
 RC <- readRDS(pathRC)
@@ -63,7 +69,10 @@ myDVDreads <- splitDVDreads(ReadClass = RC,
                             WithGeneA = TRUE,
                             WithGeneB = TRUE,
                             MinDNAlength = 35000)
-myDVDreads
+## Read sequences:
+myDVDreads$ReadSequence
+## Read definitions:
+myDVDreads$ReadDefinition
 }
 \author{
 Pascal GP Martin

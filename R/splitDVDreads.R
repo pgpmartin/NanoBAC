@@ -21,7 +21,13 @@
 #' @param WithGeneB Logical. Should the VDV reads align with GeneB? Default is NULL, i.e. no filtering on GeneB alignment
 #' @param MinDNAlength Integer. Minimum length of the DNA fragment to keep the reads in the results
 #'
-#' @return A DNAStringSet with the split reads
+#' @return A list with:
+#'     \itemize{
+#'         \item{ReadDefinition}{ a \code{DNAStringSet} with the split reads}
+#'         \item{ReadSequence}{ a \code{GRanges} object with the definition of the DV/VD reads}
+#'     }
+#'     Note that reads with alignment on the opposite strand of the vector ("-" strand)
+#'     are automatically reverse complemented
 #'
 #' @importFrom magrittr %>%
 #' @importFrom dplyr filter left_join mutate transmute select rename
@@ -38,7 +44,7 @@
 #' @export
 #'
 #' @examples
-#' ## For simplicity (and to limit file size) we only keep the data for 5 pres-selected DVD reads
+#' ## For simplicity (and to limit file size) we only keep the data for 5 pre-selected DVD reads
 #' ## Path to file (.rds) created with the AnnotateBACreads function
 #' pathRC <- system.file("extdata", "BAC02_ReadClass.rds", package = "NanoBAC")
 #' RC <- readRDS(pathRC)
@@ -56,7 +62,10 @@
 #'                             WithGeneA = TRUE,
 #'                             WithGeneB = TRUE,
 #'                             MinDNAlength = 35000)
-#' myDVDreads
+#' ## Read sequences:
+#' myDVDreads$ReadSequence
+#' ## Read definitions:
+#' myDVDreads$ReadDefinition
 
 splitDVDreads <- function(
                           ReadClass = NULL,
@@ -180,7 +189,7 @@ splitDVDreads <- function(
   if (nrow(allDVD) == 0) {
 
     warning("No DVD reads in the dataset")
-    hemiDVDreads <- NULL
+    res <- NULL
 
   } else {
 
@@ -242,9 +251,12 @@ splitDVDreads <- function(
 
     }
 
+    res <- list(ReadDefinition = readGR,
+                ReadSequence = hemiDVDreads)
+
   }
 
-return(hemiDVDreads)
+return(res)
 
 }
 
