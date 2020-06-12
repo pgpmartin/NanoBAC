@@ -37,6 +37,7 @@ A list with:
     }
     Note that reads with alignment on the opposite strand of the vector ("-" strand)
     are automatically reverse complemented
+       If no reads are selected, the function returns NULL and a warning.
 }
 \description{
 The function does the following:

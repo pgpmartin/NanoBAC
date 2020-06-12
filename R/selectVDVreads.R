@@ -228,7 +228,7 @@ selectVDVreads <- function(ReadClass = NULL,
     pdum <- ggplot2::ggplot(vdvdf2,
                             ggplot2::aes(x = "BAC",
                                          y = .data$DNAlength/1000)) +
-            ggplot2::geom_jitter()
+            ggplot2::geom_jitter(height = 0)
     xPoints <- ggplot2::layer_data(pdum, i=1)$x
 
     vdvdf2 <- dplyr::bind_cols(vdvdf2,
