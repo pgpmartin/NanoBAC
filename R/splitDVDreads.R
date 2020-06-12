@@ -28,6 +28,7 @@
 #'     }
 #'     Note that reads with alignment on the opposite strand of the vector ("-" strand)
 #'     are automatically reverse complemented
+#'        If no reads are selected, the function returns NULL and a warning.
 #'
 #' @importFrom magrittr %>%
 #' @importFrom dplyr filter left_join mutate transmute select rename
@@ -178,20 +179,26 @@ splitDVDreads <- function(
                            isHostAlign = Hostfilter
                            )
 
-#keep only reads with a DNA fragment longer than MinDNAlength
-  allDVD <- dplyr::filter(allDVD, .data$LongestDNA >= MinDNAlength)
 
 
 #---------------------
 # If DVD reads are present split their sequences in 2 reads containing the vector sequence
 #---------------------
 
-  if (nrow(allDVD) == 0) {
+  if (is.null(allDVD)) {
 
     warning("No DVD reads in the dataset")
     res <- NULL
 
   } else {
+    #keep only reads with a DNA fragment longer than MinDNAlength
+    allDVD <- dplyr::filter(allDVD, .data$LongestDNA >= MinDNAlength)
+
+    if (nrow(allDVD) == 0) {
+      warning("No DVD reads selected after filtering for DNA size")
+      res <- NULL
+
+    } else {
 
     ## import blastvec, filter and keep only alignments for DVD reads
     vecaln <- checkBlastVar(blastvec)
@@ -254,6 +261,7 @@ splitDVDreads <- function(
     res <- list(ReadDefinition = readGR,
                 ReadSequence = hemiDVDreads)
 
+    }
   }
 
 return(res)
