@@ -7,11 +7,13 @@
 #'   \item{Select VDV reads of the right size}{VDV reads within +/- \code{SizeTolerance}\% of the estimated size are selected}
 #'   \item{Plot VDV read size}{The plot illustrates the size of all VDV reads and the selection process}
 #'   }
-#' By default, if alignemnt to the host genome is provided in the \code{ReadClass} object (column \code{HostAlign}),
-#' then the selected VDV reads do not align to the host genome
+#' By default, if alignment to the host genome is provided in the \code{ReadClass} object (column \code{HostAlign}),
+#' then the selected VDV reads do not align to the host genome.
+#' The function allows the user to exclude reads from the analysis.
 #'
 #' @param ReadClass Either a tibble obtained with the \code{\link{AnnotateBACreads}} function
 #'                  or a path to an rds file containing such a file
+#' @param ignoredReads (optional) vector of read names that should be ignored.
 #' @param SizeTolerance A single number in [0,1[.
 #'                      Reads with a size corresponding to the estimated size +/- \code{SizeTolerance}\% are selected
 #' @param WithGeneA Logical. Should the VDV reads align with GeneA? Default is NULL, i.e. no filtering on GeneA alignment
@@ -34,7 +36,7 @@
 #' }
 #'
 #' @importFrom magrittr %>%
-#' @importFrom dplyr bind_cols bind_rows select mutate pull
+#' @importFrom dplyr bind_cols bind_rows select filter mutate pull
 #' @importFrom rlang .data
 #' @importFrom ggplot2 ggplot aes geom_jitter layer_data geom_point labs
 #'                     scale_y_continuous expand_scale theme_bw theme
@@ -66,6 +68,7 @@ selectVDVreads <- function(ReadClass = NULL,
                            SizeTolerance = 0.05,
                            WithGeneA = NULL,
                            WithGeneB = NULL,
+                           ignoredReads = NULL,
                            MaxClusters = 10L,
                            makePlot = TRUE,
                            plotVar = c("ReadLength", "InsertLength")) {
@@ -89,6 +92,15 @@ selectVDVreads <- function(ReadClass = NULL,
 
   if (ncol(RC)<7 || !identical(colnames(RC)[1:7], expectedColNames)) {
     stop("ReadClass does not have the expected first 7 columns")
+  }
+
+## Remove ignored reads
+  if (!is.null(ignoredReads)) {
+    if (!all(ignoredReads %in% RC$ReadName)) {
+       stop("Some ignored reads were not found in the dataset")
+    }
+    RC <- RC %>% dplyr::filter(!(.data$ReadName %in% ignoredReads))
+    message(length(ignoredReads), " reads were removed from the dataset before analysis (ignoredReads).")
   }
 
 ## SizeTolerance

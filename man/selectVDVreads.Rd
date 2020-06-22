@@ -9,6 +9,7 @@ selectVDVreads(
   SizeTolerance = 0.05,
   WithGeneA = NULL,
   WithGeneB = NULL,
+  ignoredReads = NULL,
   MaxClusters = 10L,
   makePlot = TRUE,
   plotVar = c("ReadLength", "InsertLength")
@@ -24,6 +25,8 @@ Reads with a size corresponding to the estimated size +/- \code{SizeTolerance}\%
 \item{WithGeneA}{Logical. Should the VDV reads align with GeneA? Default is NULL, i.e. no filtering on GeneA alignment}
 
 \item{WithGeneB}{Logical. Should the VDV reads align with GeneB? Default is NULL, i.e. no filtering on GeneB alignment}
+
+\item{ignoredReads}{(optional) vector of read names that should be ignored.}
 
 \item{MaxClusters}{Integer. Maximum number of clusters to make with VDV reads to estimate the size of the DNA insert.
 Default to 10 which in our hands works in most situations.}
@@ -53,8 +56,9 @@ The function does the following:
   \item{Select VDV reads of the right size}{VDV reads within +/- \code{SizeTolerance}\% of the estimated size are selected}
   \item{Plot VDV read size}{The plot illustrates the size of all VDV reads and the selection process}
   }
-By default, if alignemnt to the host genome is provided in the \code{ReadClass} object (column \code{HostAlign}),
-then the selected VDV reads do not align to the host genome
+By default, if alignment to the host genome is provided in the \code{ReadClass} object (column \code{HostAlign}),
+then the selected VDV reads do not align to the host genome.
+The function allows the user to exclude reads from the analysis.
 }
 \examples{
 ## Path to file (.rds) created with the AnnotateBACreads function
