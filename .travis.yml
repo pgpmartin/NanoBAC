@@ -1,0 +1,27 @@
+# R for travis: see documentation at https://docs.travis-ci.com/user/languages/r
+
+language: r
+sudo: false
+cache: packages
+
+#Exclude osx + bioc-devel as suggested here: https://github.com/irenecrsn/gmat/issues/5
+matrix:
+  include:
+    - os: linux
+      r: bioc-release
+    - os: linux
+      r: bioc-devel
+    - os: osx
+      r: bioc-release
+
+bioc_packages:
+  - GenomeInfoDbData
+
+r_packages:
+  - covr
+
+# Strict checks
+warnings_are_errors: true
+
+after_success:
+  - Rscript -e 'covr::codecov(type = "all")'
