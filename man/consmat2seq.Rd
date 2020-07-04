@@ -8,7 +8,7 @@ consmat2seq(x, ambiguityLetter = "N", threshold = 0.5)
 }
 \arguments{
 \item{x}{a consensus matrix (i.e. a matrix of integers) obtained generally
-using the \code{\link[Biostrings]{consensusMatrix}} function.}
+using the \code{\link[Biostrings:letterFrequency]{consensusMatrix}} function.}
 
 \item{ambiguityLetter}{Letter used when there is an ambiguity. (Default is "N")}
 
@@ -18,7 +18,7 @@ using the \code{\link[Biostrings]{consensusMatrix}} function.}
 A character string
 }
 \description{
-This function is a simplified version of the \code{\link[Biostrings]{consensusString}}
+This function is a simplified version of the \code{\link[Biostrings:letterFrequency]{consensusString}}
 function that:
 \enumerate{
   \item only allows bases A, T, G, C and possibly a single ambiguity letter (default to N)
@@ -28,7 +28,7 @@ function that:
 }
 Note that the function will not work if one of the base A, T, G or C or
 if the gap "-" is completely absent from the alignment.
-Surprisingly, the \code{\link[Biostrings]{consensusString}} function does not give identical
+Surprisingly, the \code{\link[Biostrings:letterFrequency]{consensusString}} function does not give identical
 results when used on a \code{DNAalignment} object or a frequency matrix given
 by \code{consensusMatrix} with \code{prob=TRUE}. Using the default values,
 this function will give the same result as
