@@ -19,7 +19,7 @@ a Blast result table imported with the readBlast function
 Check if an object was imported using \code{readBlast} or import an object using \code{readBlast}
 }
 \examples{
-\donttest{
+\dontrun{
 ## Create a basic data frame with the right columns
 df <- data.frame("QueryACC" = "MyVector",
                  "SubjectACC" = "Read1",

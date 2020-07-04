@@ -9,7 +9,7 @@
 #' @keywords internal
 #'
 #' @examples
-#' \donttest{
+#' \dontrun{
 #' ## Create a basic data frame with the right columns
 #' df <- data.frame("QueryACC" = "MyVector",
 #'                  "SubjectACC" = "Read1",
