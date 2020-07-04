@@ -19,16 +19,16 @@
 #' @examples
 #' \donttest{
 #' # With an object in R
-#' TestArg(1:10, expectedClass = "integer") #returns 1:10
+#' NanoBAC:::TestArg(1:10, expectedClass = "integer") #returns 1:10
 #' \dontrun{
-#' TestArg(1:10, expectedClass = "character") #returns an error
+#' NanoBAC:::TestArg(1:10, expectedClass = "character") #returns an error
 #' }
 #'
 #' #With a path to a file
 #' Path2Blast <- system.file("extdata", "blastExample.tab", package = "NanoBAC")
-#' TestArg(Path2Blast, readBlast, "tbl_df") #returns the imported file
+#' NanoBAC:::TestArg(Path2Blast, readBlast, "tbl_df") #returns the imported file
 #' \dontrun{
-#' TestArg(Path2Blast, readBlast, "integer") #returns an error
+#' NanoBAC:::TestArg(Path2Blast, readBlast, "integer") #returns an error
 #' }
 #' }
 
