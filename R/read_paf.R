@@ -13,9 +13,10 @@
 #' @examples
 #' ## Example data set:
 #'    Path2paf <- system.file("extdata", "BAC02_mmap2Ecoli.paf", package = "NanoBAC")
-#' ## Import the data (ignore the parsing failures):
+#' ## Import the data (ignore the warnings linked to the file parsing):
+#' suppressWarnings(
 #'    mypaf <- read_paf(Path2paf)
-#'
+#'    )
 
 read_paf <- function (file, max_tags = 20, fix0based = TRUE){
 

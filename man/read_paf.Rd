@@ -36,7 +36,8 @@ This function is only slighly modified from \url{https://raw.githubusercontent.c
 \examples{
 ## Example data set:
    Path2paf <- system.file("extdata", "BAC02_mmap2Ecoli.paf", package = "NanoBAC")
-## Import the data (ignore the parsing failures):
+## Import the data (ignore the warnings linked to the file parsing):
+suppressWarnings(
    mypaf <- read_paf(Path2paf)
-
+   )
 }

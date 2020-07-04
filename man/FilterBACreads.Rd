@@ -61,5 +61,7 @@ FilterBACreads(pathRC, "D", isHostAlign = TRUE)
 ## Extract the annotation of the VD and the VDV reads that align to both GeneA and GeneB
 FilterBACreads(pathRC, c("VD", "VDV"), alnGeneA = TRUE, alnGeneB = TRUE)
 ## There are no VDV reads that align to the E. coli host genome
+\dontrun{
 FilterBACreads(pathRC, "VDV", isHostAlign = TRUE)
+}
 }
