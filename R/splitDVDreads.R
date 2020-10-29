@@ -127,7 +127,7 @@ splitDVDreads <- function(
   }
 
 ## WithGeneA
-  if (is.na(WithGeneA)) {WithGeneA <- NULL}
+  if (is.na(WithGeneA) || is.null(WithGeneA)) {WithGeneA <- NULL}
   if (!is.null(WithGeneA) && !is.logical(WithGeneA)) {
     stop("WithGeneA should be TRUE/FALSE (or NULL)")
   }
@@ -138,7 +138,7 @@ splitDVDreads <- function(
   }
 
 ## WithGeneB
-  if (is.na(WithGeneB)) {WithGeneB <- NULL}
+  if (is.na(WithGeneB) || is.null(WithGeneB)) {WithGeneB <- NULL}
   if (!is.null(WithGeneB) && !is.logical(WithGeneB)) {
     stop("WithGeneB should be TRUE/FALSE (or NULL)")
   }
